@@ -6,8 +6,6 @@ public class Temp {
 
     public static void main(String[] args) {
 
-        CarBean car = new CarBean();
-        car.setColor("rouge");
 
     }
 }

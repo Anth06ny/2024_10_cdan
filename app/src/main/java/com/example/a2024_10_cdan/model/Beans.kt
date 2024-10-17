@@ -4,23 +4,65 @@ import java.util.Random
 
 
 fun main() {
-    //    var car  = CarBean("Seat", "Leon")
-    //    car.color = "Rouge"
-    //    println(car)
-
     //    var house = HouseBean("Rouge", 10, 20)
     //    house.area = 5
     //    house.print()
 
     //PrintRandomIntBean()
 
-    val t1 = ThermometerBean(min = -20, max = 50, value = 10000)
-    println("Température de ${t1.value}") // 0
-    t1.value = 10000
-    println("Température de ${t1.value}") //
+//    val t1 = ThermometerBean(min = -20, max = 50, value = 10000)
+//    println("Température de ${t1.value}") // 0
+//    t1.value = 10000
+//    println("Température de ${t1.value}") //
+//
+//    val t2 = ThermometerBean.getCelsiusThermometer()
 
-    val t2 = ThermometerBean.getCelsiusThermometer()
+//    val randomName = RandomName()
+//    //randomName.add("bobby")
+//    repeat(30) {
+//        println(randomName.nextDiff() + " ")
+//    }
 
+}
+
+data class PictureBean(val id:Int, val url: String, val title: String, val longText: String)
+
+class RandomName {
+    private val list = arrayListOf("Toto", "Tata", "Titi")
+    private var oldValue = ""
+
+    fun next2() = Pair(nextDiff(), nextDiff())
+
+    fun nextDiff2(): String {
+        oldValue = list.filter { oldValue != it  }.random()
+        return oldValue
+    }
+
+    fun nextDiff3() = list.filter { oldValue != it  }.random().also{ oldValue = it}
+
+    fun nextDiff(): String {
+        var newName = next()
+        while(oldValue == newName) {
+            newName = next()
+        }
+        oldValue = newName
+
+        return newName
+    }
+
+    fun add(name:String?){
+        if(name !in list && !name.isNullOrBlank()) {
+            list.add(name)
+        }
+    }
+
+    fun next() =  list.random()
+
+    fun addAll(vararg  names : String){
+        for(name in names) {
+            add(name)
+        }
+    }
 }
 
 class ThermometerBean(var min: Int, var max: Int, value: Int) {
@@ -59,6 +101,7 @@ class HouseBean(var color: String, length: Int, width: Int) {
     fun print() = println("La maison $color fait ${area}m²")
 }
 
-data class CarBean(var marque: String = "", var model: String? = null) {
+data class CarBean(var marque: String = "", var model: String? = null, var thermometer: ThermometerBean) {
     var color = ""
 }
+
