@@ -9,7 +9,7 @@ import okhttp3.Response
 fun main() {
 
 
-    val list = WeatherAPI.loadWeathers("Toulon")
+    val list = WeatherAPI.loadWeathers("")
     val list2 = WeatherAPI.loadWeathers("Toulon")
     val list3 = WeatherAPI.loadWeathers("Toulon")
     //println(list)
@@ -58,7 +58,7 @@ object WeatherAPI {
 
        val json =  sendGet("https://api.openweathermap.org/data/2.5/find?q=$cityName&cnt=5&appid=b80967f0a6bd10d23e44848547b26550&units=metric&lang=fr")
 
-        Thread.sleep(2000)
+        //Thread.sleep(2000)
 
         val list =  gson.fromJson(json, WeatherAPIResult::class.java).list
 
