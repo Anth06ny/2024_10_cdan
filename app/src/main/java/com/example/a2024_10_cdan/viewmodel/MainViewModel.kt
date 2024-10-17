@@ -12,15 +12,19 @@ fun main() {
     val viewModel = MainViewModel()
 
     viewModel.loadWeathers("")
-    while (viewModel.runInProgress) Thread.sleep(500)
+    while (viewModel.runInProgress) {
+        Thread.sleep(500)
+    }
 
     viewModel.loadWeathers("Paris")
-    while (viewModel.runInProgress) Thread.sleep(500)
+    while (viewModel.runInProgress) {
+        Thread.sleep(500)
+    }
 
 
     //Affichage de la liste ou du message d'erreur
     println("List : ${viewModel.dataList}")
-    println("ErrorMessage : ${viewModel.errorMessage}" )
+    println("ErrorMessage : ${viewModel.errorMessage}")
 }
 
 class MainViewModel : ViewModel() {
