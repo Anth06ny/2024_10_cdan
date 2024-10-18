@@ -1,7 +1,9 @@
 package com.example.a2024_10_cdan.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +26,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -39,8 +46,10 @@ import com.example.a2024_10_cdan.ui.theme._2024_10_cdanTheme
 import com.example.a2024_10_cdan.viewmodel.MainViewModel
 
 @Preview(showBackground = true, showSystemUi = true)
-@Preview(showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES,
-    locale = "FR")
+@Preview(
+    showBackground = true, showSystemUi = true, uiMode = UI_MODE_NIGHT_YES,
+    locale = "FR"
+)
 @Composable
 fun SearchScreenPreview() {
     //Il faut remplacer NomVotreAppliTheme par le thème de votre application
@@ -59,13 +68,23 @@ fun SearchScreenPreview() {
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
+
+    var searchText = remember { mutableStateOf("") }
+
     Column(modifier = modifier.fillMaxSize()) {
 
-        SearchBar()
+        SearchBar(searchText = searchText)
+        //Version plus officielle
+//        SearchBarExpert(text = searchText.value) {
+//            searchText.value = it
+//        }
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(1f)) {
-            items(mainViewModel.dataList.size) {
-                PictureRowItem(data = mainViewModel.dataList[it])
+
+            val filterList = mainViewModel.dataList.filter { it.title.contains(searchText.value, true) }
+
+            items(filterList.size) {
+                PictureRowItem(data = filterList[it])
             }
         }
 
@@ -74,9 +93,9 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
             Spacer(Modifier.weight(1f))
 
             Button(
-                onClick = { /* Do something! */ },
+                onClick = { searchText.value = "" },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                modifier =  Modifier.weight(3f)
+                modifier = Modifier.weight(3f)
             ) {
                 Icon(
                     Icons.Filled.Favorite,
@@ -90,7 +109,7 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
             Button(
                 onClick = { /* Do something! */ },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                modifier =  Modifier.weight(3f)
+                modifier = Modifier.weight(3f)
             ) {
                 Icon(
                     Icons.Filled.Favorite,
@@ -106,16 +125,35 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
 }
 
 @Composable
-fun SearchBar(modifier: Modifier = Modifier) {
+fun SearchBar(modifier: Modifier = Modifier, searchText: MutableState<String>) {
+    TextField(
+        value = searchText.value, //Valeur affichée
+        onValueChange = { newValue: String ->
+            searchText.value = newValue
+        }, //Nouveau texte entrée
+        leadingIcon = { //Image d'icone
+            Icon(
+                imageVector = Icons.Default.Search,
+                tint = MaterialTheme.colorScheme.primary,
+                contentDescription = null
+            )
+        },
+        singleLine = true,
+        label = { Text("Enter text") }, //Texte d'aide qui se déplace
 
-    println("SearchBar")
-    var text = "toto"
+        //Comment le composant doit se placer
+        modifier = modifier
+            .fillMaxWidth() // Prend toute la largeur
+            .heightIn(min = 56.dp) //Hauteur minimum
+    )
+}
+
+@Composable
+fun SearchBarExpert(modifier: Modifier = Modifier, text: String, onValueChange: (String) -> Unit) {
 
     TextField(
         value = text, //Valeur affichée
-        onValueChange = {newValue:String ->
-            println(newValue)
-            text = newValue }, //Nouveau texte entrée
+        onValueChange = onValueChange, //Nouveau texte entrée
         leadingIcon = { //Image d'icone
             Icon(
                 imageVector = Icons.Default.Search,
@@ -136,9 +174,14 @@ fun SearchBar(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable //Composable affichant 1 PictureBean
 fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
-    Row(modifier = modifier
-        .fillMaxWidth()
-        .background(MaterialTheme.colorScheme.tertiary)) {
+
+    var showFullText by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.tertiary)
+    ) {
         //Permission Internet nécessaire
         GlideImage(
             model = data.url,
@@ -157,15 +200,21 @@ fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
                 .widthIn(max = 100.dp)
         )
 
-        Column(modifier = Modifier.padding(4.dp)) {
+        Column(modifier = Modifier
+            .padding(4.dp)
+            .clickable {
+                showFullText = !showFullText
+            }) {
             Text(
                 text = data.title, fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
+
             Text(
-                data.longText.take(20) + "...",
+                text = if (showFullText) data.longText else (data.longText.take(20) + "..."),
                 color = MaterialTheme.colorScheme.onTertiary,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                modifier = Modifier.animateContentSize()
             )
         }
     }
