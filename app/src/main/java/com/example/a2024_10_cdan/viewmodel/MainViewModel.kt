@@ -40,6 +40,7 @@ open class MainViewModel : ViewModel() {
 
 
     init {//Création d'un jeu de donnée au démarrage
+        println("MainViewModel.init")
         loadFakeData()
     }
 
