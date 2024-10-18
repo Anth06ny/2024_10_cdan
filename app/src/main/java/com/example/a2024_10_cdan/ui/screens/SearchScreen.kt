@@ -1,6 +1,7 @@
 package com.example.a2024_10_cdan.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -42,6 +45,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.example.a2024_10_cdan.R
 import com.example.a2024_10_cdan.model.PictureBean
+import com.example.a2024_10_cdan.ui.MyError
 import com.example.a2024_10_cdan.ui.theme._2024_10_cdanTheme
 import com.example.a2024_10_cdan.viewmodel.MainViewModel
 
@@ -56,8 +60,10 @@ fun SearchScreenPreview() {
     //Utilisé par exemple dans MainActivity.kt sous setContent {...}
     _2024_10_cdanTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
             var viewModel = MainViewModel()
+            viewModel.loadFakeData()
+            viewModel.errorMessage = "Un message d'erreur"
+            viewModel.runInProgress = true
             SearchScreen(
                 modifier = Modifier.padding(innerPadding),
                 mainViewModel = viewModel
@@ -79,9 +85,25 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
 //            searchText.value = it
 //        }
 
+        MyError(errorMessage =  mainViewModel.errorMessage)
+
+
+
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            visible = mainViewModel.runInProgress){
+            CircularProgressIndicator()
+        }
+
+
+
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(1f)) {
 
-            val filterList = mainViewModel.dataList.filter { it.title.contains(searchText.value, true) }
+            //Version liste filtrer
+            //val filterList = mainViewModel.dataList.filter { it.title.contains(searchText.value, true) }
+
+            //version barre de recherche
+            val filterList = mainViewModel.dataList
 
             items(filterList.size) {
                 PictureRowItem(data = filterList[it])
@@ -107,7 +129,7 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
             }
 
             Button(
-                onClick = { /* Do something! */ },
+                onClick = { mainViewModel.loadWeathers(searchText.value) },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.weight(3f)
             ) {

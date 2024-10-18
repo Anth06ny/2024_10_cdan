@@ -1,5 +1,8 @@
 package com.example.a2024_10_cdan.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a2024_10_cdan.model.PictureBean
@@ -34,15 +37,15 @@ const val LONG_TEXT = """Le Lorem Ipsum est simplement du faux texte employé da
 
 open class MainViewModel : ViewModel() {
 
-    var dataList: List<PictureBean> = ArrayList()
-    var runInProgress = false
-    var errorMessage = ""
+    var dataList by mutableStateOf<List<PictureBean>>(emptyList())
+    var runInProgress by mutableStateOf(false)
+    var errorMessage by mutableStateOf("")
 
 
-    init {//Création d'un jeu de donnée au démarrage
-        println("MainViewModel.init")
-        loadFakeData()
-    }
+//    init {//Création d'un jeu de donnée au démarrage
+//        println("MainViewModel.init")
+//        loadFakeData()
+//    }
 
     fun loadFakeData(){
         dataList = listOf(PictureBean(1, "https://picsum.photos/200", "ABCD", LONG_TEXT),
