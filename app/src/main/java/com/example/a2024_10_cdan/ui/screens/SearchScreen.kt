@@ -3,16 +3,26 @@ package com.example.a2024_10_cdan.ui.screens
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
+import com.example.a2024_10_cdan.R
+import com.example.a2024_10_cdan.model.PictureBean
 import com.example.a2024_10_cdan.ui.theme._2024_10_cdanTheme
 import com.example.a2024_10_cdan.viewmodel.MainViewModel
 
@@ -24,8 +34,10 @@ fun SearchScreenPreview() {
     //Utilisé par exemple dans MainActivity.kt sous setContent {...}
     _2024_10_cdanTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+
+            var viewModel = MainViewModel()
             SearchScreen(modifier = Modifier.padding(innerPadding),
-            mainViewModel = MainViewModel()
+            mainViewModel = viewModel
             )
         }
     }
@@ -33,22 +45,40 @@ fun SearchScreenPreview() {
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
-    Column (modifier= modifier) {
+    Column (modifier= modifier.fillMaxSize().background(Color.LightGray)) {
+
         repeat(mainViewModel.dataList.size) {
-            PictureRowItem(
-                mainViewModel.dataList[it].title, Color.Blue,
-                modifier = Modifier
-                    .background(Color.Red)
-                    .padding(1.dp)
-                    .background(Color.Yellow)
-
-
-            )
+            PictureRowItem(data =  mainViewModel.dataList[it])
         }
     }
 }
 
-@Composable
-fun PictureRowItem(text:String, color:Color, modifier:Modifier = Modifier ){
-    Text( modifier = modifier , text = text,fontSize = 20.sp, color = color)
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable //Composable affichant 1 PictureBean
+fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
+    Row(modifier= modifier.fillMaxWidth().background(Color.White)) {
+        //Permission Internet nécessaire
+        GlideImage(
+            model = data.url,
+            //Pour aller le chercher dans string.xml
+            //contentDescription = getString(R.string.picture_of_cat),
+            //En dur
+            contentDescription = "une photo de chat",
+            // Image d'attente. Permet également de voir l'emplacement de l'image dans la Preview
+            loading = placeholder(R.mipmap.ic_launcher_round),
+            // Image d'échec de chargement
+            failure = placeholder(R.mipmap.ic_launcher),
+            contentScale = ContentScale.Fit,
+            //même autres champs qu'une Image classique
+            modifier = Modifier.heightIn(max = 100.dp) //Sans hauteur il prendra tous l'écran
+                .widthIn(max= 100.dp)
+        )
+
+        Column(modifier= Modifier.padding(4.dp)) {
+            Text(text = data.title, fontSize = 20.sp                 )
+            Text(data.longText.take(20) + "...",
+                color = Color.Blue,
+                fontSize = 14.sp )
+        }
+    }
 }
