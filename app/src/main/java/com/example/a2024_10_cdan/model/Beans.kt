@@ -2,8 +2,33 @@ package com.example.a2024_10_cdan.model
 
 import java.util.Random
 
+class MyLiveData(value:String?) {
+
+    var value:String? = value
+        set(newValue) {
+            field = newValue
+            action.forEach { it(newValue) }
+        }
+
+    var action : ArrayList<(String?)-> Unit> = ArrayList()
+}
 
 fun main() {
+
+    var toto = MyLiveData("Coucou")
+    toto.action += {
+        println("-1-$it")
+    }
+
+    toto.action += {
+        println("-2-$it")
+    }
+
+    toto.value = "blabla"
+    toto.value = "adsad"
+
+
+
     //    var house = HouseBean("Rouge", 10, 20)
     //    house.area = 5
     //    house.print()
