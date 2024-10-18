@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,7 +45,7 @@ fun SearchScreenPreview() {
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
-    Column (modifier= modifier.fillMaxSize().background(Color.LightGray)) {
+    Column (modifier= modifier.fillMaxSize()) {
 
         repeat(mainViewModel.dataList.size) {
             PictureRowItem(data =  mainViewModel.dataList[it])
@@ -56,7 +56,7 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable //Composable affichant 1 PictureBean
 fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
-    Row(modifier= modifier.fillMaxWidth().background(Color.White)) {
+    Row(modifier= modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiary)) {
         //Permission Internet nécessaire
         GlideImage(
             model = data.url,
@@ -75,9 +75,9 @@ fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
         )
 
         Column(modifier= Modifier.padding(4.dp)) {
-            Text(text = data.title, fontSize = 20.sp                 )
+            Text(text = data.title, fontSize = 20.sp, color = MaterialTheme.colorScheme.onPrimaryContainer                 )
             Text(data.longText.take(20) + "...",
-                color = Color.Blue,
+                color =  MaterialTheme.colorScheme.onTertiary,
                 fontSize = 14.sp )
         }
     }
