@@ -40,12 +40,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.example.a2024_10_cdan.R
 import com.example.a2024_10_cdan.model.PictureBean
 import com.example.a2024_10_cdan.ui.MyError
+import com.example.a2024_10_cdan.ui.Routes
 import com.example.a2024_10_cdan.ui.theme._2024_10_cdanTheme
 import com.example.a2024_10_cdan.viewmodel.MainViewModel
 
@@ -73,7 +75,8 @@ fun SearchScreenPreview() {
 }
 
 @Composable
-fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
+fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel,
+                 navHostController: NavHostController? = null) {
 
 
 
@@ -108,7 +111,10 @@ fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
             val filterList = mainViewModel.dataList
 
             items(filterList.size) {
-                PictureRowItem(data = filterList[it])
+                PictureRowItem(data = filterList[it],
+                    onClick = {navHostController?.navigate(Routes.DetailScreen.withObject(filterList[it]))}
+
+                )
             }
         }
 
@@ -197,7 +203,7 @@ fun SearchBarExpert(modifier: Modifier = Modifier, text: String, onValueChange: 
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable //Composable affichant 1 PictureBean
-fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
+fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean, onClick: () -> Unit) {
 
     var showFullText by remember { mutableStateOf(false) }
 
@@ -222,6 +228,7 @@ fun PictureRowItem(modifier: Modifier = Modifier, data: PictureBean) {
             modifier = Modifier
                 .heightIn(max = 100.dp) //Sans hauteur il prendra tous l'écran
                 .widthIn(max = 100.dp)
+                .clickable {onClick()}
         )
 
         Column(modifier = Modifier

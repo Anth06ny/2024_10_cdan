@@ -53,9 +53,15 @@ dependencies {
     //Parsing
     implementation("com.google.code.gson:gson:+")
 
+    //Image
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
+    //Viewmodel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    //Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.0")
+
 
 
     implementation(libs.androidx.core.ktx)
@@ -66,6 +72,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
