@@ -19,11 +19,14 @@ fun main() {
         Thread.sleep(500)
     }
 
+    //Affichage de la liste ou du message d'erreur
+    println("List : ${viewModel.dataList}")
+    println("ErrorMessage : ${viewModel.errorMessage}")
+
     viewModel.loadWeathers("Paris")
     while (viewModel.runInProgress) {
         Thread.sleep(500)
     }
-
 
     //Affichage de la liste ou du message d'erreur
     println("List : ${viewModel.dataList}")

@@ -3,24 +3,21 @@ package com.example.a2024_10_cdan.model
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 
 //Utilisation
 fun main() {
 
 
-    val list = WeatherAPI.loadWeathers("")
-    val list2 = WeatherAPI.loadWeathers("Toulon")
-    val list3 = WeatherAPI.loadWeathers("Toulon")
-    //println(list)
+    val list = WeatherAPI.loadWeathers("Toulon")
+    println(list)
 
-//    for(weather in list){
-//        println("""
-//            Il fait ${weather.main.temp}° à ${weather.name} (id=${weather.id}) avec un vent de ${weather.wind.speed} m/s
-//            -Description : ${weather.weather.getOrNull(0)?.description ?: "-"}
-//            -Icône : ${weather.weather.getOrNull(0)?.description ?: "-"}
-//        """.trimIndent())
-//    }
+    for(weather in list){
+        println("""
+            Il fait ${weather.main.temp}° à ${weather.name} (id=${weather.id}) avec un vent de ${weather.wind.speed} m/s
+            -Description : ${weather.weather.getOrNull(0)?.description ?: "-"}
+            -Icône : ${weather.weather.getOrNull(0)?.description ?: "-"}
+        """.trimIndent())
+    }
 
 
 //    val users = WeatherAPI.loadRandomUsers()

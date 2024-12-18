@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             _2024_10_cdanTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val mainViewModel: MainViewModel = viewModel()
+                    val mainViewModel: MainViewModel =  viewModel()
                     SearchScreen(
                         modifier = Modifier.padding(innerPadding),
                         mainViewModel = mainViewModel

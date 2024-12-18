@@ -75,6 +75,8 @@ fun SearchScreenPreview() {
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
 
+
+
     var searchText = remember { mutableStateOf("") }
 
     Column(modifier = modifier.fillMaxSize()) {
